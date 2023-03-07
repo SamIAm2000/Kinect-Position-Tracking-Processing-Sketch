@@ -73,9 +73,9 @@ NetAddress host;
 OscMessage centers;
 
 void setup() {
-  //size(848, 512);
+  size(848, 512);
   //size(1920, 1080);
-  fullScreen();
+  //fullScreen();
 
   // Set-up OSC
   oscP5 = new OscP5(this, 8000);
@@ -110,7 +110,22 @@ void draw() {
   background(0);
   //// to add the background depth image to the display
   //// CHANGE: need to scale and rotate as below 
+  // Do the follow translations and scaling and rotating 
+  //pg.translate(CAM_CENTERY, CAM_CENTERX);
+  //pg.translate(shifts[0][0], shifts[0][1]);
+  //pg.scale(mm2px, -mm2px);
+  //pg.rotate(PI/2);
   image(kinect2a.getDepthImage(), 0, 0);
+ 
+  // And add Image from Kinect 2b (the other kinect) with the following translations/ scaling / rotation
+  // image(kinect2b.getDepthImage(), 0, 0);
+  // pg.translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
+  //pg.translate(shifts[1][0], shifts[1][1]);
+  //pg.scale(mm2px, -mm2px);
+  //pg.rotate(-PI/2);
+   
+     
+
   // Clear OSC messages
   centers = new OscMessage("/centers");
 
@@ -152,7 +167,7 @@ void draw() {
   text(brightness(img.pixels[int(random(img.pixels.length))]), width/2, height/2);
   
   // Show depth camera image
-  //image(img, 0, 0);
+  image(img, 0, 0);
 
   // Send the PImage into OpenCV
   opencv.loadImage(img);
