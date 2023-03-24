@@ -118,24 +118,27 @@ void draw() {
   //pg.scale(mm2px, -mm2px);
   //pg.rotate(PI/2);
 
-  pushMatrix();
+  pushMatrix();  
   translate(CAM_CENTERY, CAM_CENTERX);
-  translate(shifts[0][0], shifts[0][1]);
-  scale(mm2px, -mm2px);
-  rotate(PI/2);
+  translate(-200,250);
+  //translate(shifts[0][0], shifts[0][1]);
+  //scale(mm2px, -mm2px);
+  rotate(-PI/2);
   image(kinect2a.getDepthImage(), 0, 0);
   popMatrix(); //pop matrix to reset transformations
  
   // And add Image from Kinect 2b (the other kinect) with the following translations/ scaling / rotation
-  // pg.translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
+  //pg.translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
   //pg.translate(shifts[1][0], shifts[1][1]);
   //pg.scale(mm2px, -mm2px);
   //pg.rotate(-PI/2);
+  
   pushMatrix();
   translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
-  translate(shifts[1][0], shifts[1][1]);
-  scale(mm2px, -mm2px);
-  rotate(-PI/2);
+  translate(200,-250);
+  //translate(shifts[1][0], shifts[1][1]);
+  //scale(mm2px, -mm2px);
+  rotate(PI/2);
   image(kinect2b.getDepthImage(), 0, 0);
   popMatrix(); 
 
@@ -179,11 +182,11 @@ void draw() {
   text(frameRate, width/2, height/2 - 100);
   text(brightness(img.pixels[int(random(img.pixels.length))]), width/2, height/2);
   
-  // Show depth camera image
-  image(img, 0, 0);
+  // Show depth camera image- should be commented typically  
+  //image(img, 0, 0);
 
   // Send the PImage into OpenCV
-  opencv.loadImage(img);
+  opencv.loadImage(img);  
   opencv.gray();
   opencv.threshold(threshold);
 
