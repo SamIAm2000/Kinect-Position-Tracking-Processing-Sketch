@@ -117,16 +117,27 @@ void draw() {
   //pg.translate(shifts[0][0], shifts[0][1]);
   //pg.scale(mm2px, -mm2px);
   //pg.rotate(PI/2);
+
+  pushMatrix();
+  translate(CAM_CENTERY, CAM_CENTERX);
+  translate(shifts[0][0], shifts[0][1]);
+  scale(mm2px, -mm2px);
+  rotate(PI/2);
   image(kinect2a.getDepthImage(), 0, 0);
+  popMatrix(); //pop matrix to reset transformations
  
   // And add Image from Kinect 2b (the other kinect) with the following translations/ scaling / rotation
-  // image(kinect2b.getDepthImage(), 0, 0);
   // pg.translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
   //pg.translate(shifts[1][0], shifts[1][1]);
   //pg.scale(mm2px, -mm2px);
   //pg.rotate(-PI/2);
-   
-     
+  pushMatrix();
+  translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
+  translate(shifts[1][0], shifts[1][1]);
+  scale(mm2px, -mm2px);
+  rotate(-PI/2);
+  image(kinect2b.getDepthImage(), 0, 0);
+  popMatrix(); 
 
   // Clear OSC messages
   centers = new OscMessage("/centers");
