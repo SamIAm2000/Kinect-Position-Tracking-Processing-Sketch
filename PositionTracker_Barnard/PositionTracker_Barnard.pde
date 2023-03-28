@@ -11,8 +11,6 @@ Thomas Sanchez Lengeling
 // Kinect Library
 import org.openkinect.processing.*;
 
-
-
 // OpenCV Library
 import gab.opencv.*;
 import java.awt.Rectangle;
@@ -119,26 +117,21 @@ void draw() {
   //pg.rotate(PI/2);
 
   pushMatrix();  
-  translate(CAM_CENTERY, CAM_CENTERX);
-  translate(-200,250);
+  //translate(CAM_CENTERY, CAM_CENTERX);
+  //translate(-200,250);
   //translate(shifts[0][0], shifts[0][1]);
-  //scale(mm2px, -mm2px);
-  rotate(-PI/2);
+  scale(1, -1);//flips image
+  //rotate(PI/2);
   image(kinect2a.getDepthImage(), 0, 0);
   popMatrix(); //pop matrix to reset transformations
  
-  // And add Image from Kinect 2b (the other kinect) with the following translations/ scaling / rotation
-  //pg.translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
-  //pg.translate(shifts[1][0], shifts[1][1]);
-  //pg.scale(mm2px, -mm2px);
-  //pg.rotate(-PI/2);
   
   pushMatrix();
-  translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
-  translate(200,-250);
+  //translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
+  translate(448,0);
   //translate(shifts[1][0], shifts[1][1]);
-  //scale(mm2px, -mm2px);
-  rotate(PI/2);
+  scale(1, -1);//flips image
+  rotate(-PI/2);
   image(kinect2b.getDepthImage(), 0, 0);
   popMatrix(); 
 
@@ -182,7 +175,7 @@ void draw() {
   text(frameRate, width/2, height/2 - 100);
   text(brightness(img.pixels[int(random(img.pixels.length))]), width/2, height/2);
   
-  // Show depth camera image- should be commented typically  
+  // Show depth camera image- should be commented out typically  
   //image(img, 0, 0);
 
   // Send the PImage into OpenCV
@@ -202,7 +195,7 @@ void draw() {
     contour.setPolygonApproximationFactor(polygonFactor);
     if (contour.numPoints() > numPoints) {
       // If the contour is big enough
-      stroke(255);
+      stroke(255); //white
       beginShape();
       
       // Get the contour's bounding box
@@ -214,7 +207,7 @@ void draw() {
       
       stroke(0, 200, 200);
       noFill();
-      rect(bb.x, bb.y, bb.width, bb.height);
+      rect(bb.x, bb.y, bb.width, bb.height); //uses the java Rectangle to draw a retangle in Processing
       // Calculate the center of the bounding box
       PVector center = new PVector(bb.x + bb.width/2, bb.y + bb.height/2);
       // Add the center to the locations message
