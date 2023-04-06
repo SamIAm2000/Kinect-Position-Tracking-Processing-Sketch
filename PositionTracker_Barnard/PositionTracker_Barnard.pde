@@ -10,8 +10,8 @@ Thomas Sanchez Lengeling
  */
 // Kinect Library
 import org.openkinect.processing.*;
-import processing.serial.*;
-Serial myPort;
+//import processing.serials.*;
+//Serial myPort;
 
 // OpenCV Library
 import gab.opencv.*;
@@ -107,7 +107,7 @@ void setup() {
   background(0);
   frameRate(25);
 
-  myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
+  //myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
   //drawgrid(5,5,100);         //Grid 
 }
 
@@ -223,7 +223,7 @@ void draw() {
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       
-      stopdog();
+      //stopdog();
       //int move = 1;//move or not move
       //if (center.x < 300|| center.x > 100){
       //  walkForward();
@@ -250,12 +250,12 @@ void drawgrid(int rows, int cols, int cellSize){
   }
 }
 
-void walkForward(){
-  myPort.write("kwkF");
-}
-void stopdog(){
-  myPort.write("kbalance");
-}
+//void walkForward(){
+//  myPort.write("kwkF");
+//}
+//void stopdog(){
+//  myPort.write("kbalance");
+//}
 
 void keyPressed() {
   if (keyCode == TAB) {
