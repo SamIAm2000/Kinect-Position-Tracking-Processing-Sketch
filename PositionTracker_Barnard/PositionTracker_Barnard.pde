@@ -28,8 +28,8 @@ Kinect2 kinect2a, kinect2b;
 //Distance parameters in mm
 //// CHANGE this to change how far way you can sense objects 
 //// need to make Min_Depth smaller to catch dog 
-int MAX_D = 3900; //This should be distance to floor 3900
-int MIN_D = 100; //2cm 500
+int MAX_D = 4050; //This should be distance to floor 3900
+int MIN_D = 2000; //2cm 500
 
 // Depth Map resolution
 int RESOLUTION = 2; //changed from 4 to 1
@@ -59,9 +59,10 @@ OpenCV opencv;
 // Resolution of contour (1 is highest, 10 is lower)
 int polygonFactor = 1;
 // Contrast tolerance for detecting foreground v. background
-int threshold = 20; //was 10
+int threshold = 10; // was 10
 // How big the contour needs to be
-int numPoints = 100;
+int numPointsMin = 50;      //was 100 (was numPoints), 50 saw the dog,
+int numPointsMax = 100;
 // Off-screen canvas to draw the depth map point cloud data to
 PGraphics pg;
 // Image to feed to openCV
@@ -106,7 +107,7 @@ void setup() {
   background(0);
   frameRate(25);
 
-  myPort = new Serial(this, Serial.list()[2], 115200); 
+  //myPort = new Serial(this, Serial.list()[2], 115200); 
   //drawgrid(5,5,100);
 }
 
@@ -188,7 +189,7 @@ void draw() {
   opencv.loadImage(img);  
   opencv.gray();
   opencv.threshold(threshold);
-  image(opencv.getSnapshot(), 0, 0);
+  image(opencv.getSnapshot(), 0, 0);        //This is to see what OpenCV sees
   // Get some contours
   ArrayList<Contour>contours = opencv.findContours(false, false);
   //println(contours.size());
@@ -200,7 +201,7 @@ void draw() {
   for (Contour contour : contours) {
     // Set resolution of contour
     contour.setPolygonApproximationFactor(polygonFactor);
-    if (contour.numPoints() > numPoints) {
+    if (contour.numPoints() > numPointsMin && contour.numPoints() < numPointsMax) {
       // If the contour is big enough
       stroke(255); //white
       beginShape();
@@ -223,11 +224,11 @@ void draw() {
       println("x = ", center.x, "y = ", center.y);
       
       //int move = 1;//move or not move
-      if (  center.x < 300|| center.x > 100){
-        walkForward();
-      } else {
-        stopdog();
-      }
+      //if (  center.x < 300|| center.x > 100){
+      //  walkForward();
+      //} else {
+      //  stopdog();
+      //}
     }
   }
   popMatrix();

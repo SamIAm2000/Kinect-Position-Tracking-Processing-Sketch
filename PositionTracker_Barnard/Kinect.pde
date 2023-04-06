@@ -22,7 +22,7 @@ void getDepth(Kinect2 kinect2) {
       PVector point = depthToPointCloudPos(x, y, d);
 
       // Scale and draw a point
-      pg.rect(point.x, point.y, 10/mm2px, 10/mm2px);
+      pg.rect(point.x, point.y, 5/mm2px, 5/mm2px);    //Originally 10/mm2px
     }
   }
 } 
