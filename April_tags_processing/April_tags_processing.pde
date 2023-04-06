@@ -10,8 +10,6 @@ Thomas Sanchez Lengeling
  */
 // Kinect Library
 import org.openkinect.processing.*;
-import processing.serial.*;
-Serial myPort;
 
 // OpenCV Library
 import gab.opencv.*;
@@ -28,11 +26,11 @@ Kinect2 kinect2a, kinect2b;
 //Distance parameters in mm
 //// CHANGE this to change how far way you can sense objects 
 //// need to make Min_Depth smaller to catch dog 
-int MAX_D = 3900; //This should be distance to floor 3900
-int MIN_D = 100; //2cm 500
+int MAX_D = 390; //This should be distance to floor
+int MIN_D = 20; //2cm
 
 // Depth Map resolution
-int RESOLUTION = 2; //changed from 4 to 1
+int RESOLUTION = 1; //changed from 4 to 1
 // Is the camera facing right-side up?
 int [][] shifts = { { 0, 30}, { -30, 0} };
 
@@ -59,7 +57,7 @@ OpenCV opencv;
 // Resolution of contour (1 is highest, 10 is lower)
 int polygonFactor = 1;
 // Contrast tolerance for detecting foreground v. background
-int threshold = 20; //was 10
+int threshold = 10;
 // How big the contour needs to be
 int numPoints = 100;
 // Off-screen canvas to draw the depth map point cloud data to
@@ -75,9 +73,9 @@ NetAddress host;
 OscMessage centers;
 
 void setup() {
-  size(848, 512);
+  //size(848, 512);
   //size(1920, 1080);
-  //fullScreen();
+  fullScreen();
 
   // Set-up OSC
   oscP5 = new OscP5(this, 8000);
@@ -104,10 +102,8 @@ void setup() {
 
   // Draw the background
   background(0);
-  frameRate(25);
 
-  myPort = new Serial(this, Serial.list()[2], 115200); 
-  //drawgrid(5,5,100);
+  frameRate(25);
 }
 
 void draw() {
@@ -133,7 +129,7 @@ void draw() {
   
   pushMatrix();    
   //translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
-  translate(394,0);
+  translate(424,0);
   //translate(shifts[1][0], shifts[1][1]);
   scale(1, -1);//flips image
   rotate(-PI/2);
@@ -188,7 +184,7 @@ void draw() {
   opencv.loadImage(img);  
   opencv.gray();
   opencv.threshold(threshold);
-  image(opencv.getSnapshot(), 0, 0);
+
   // Get some contours
   ArrayList<Contour>contours = opencv.findContours(false, false);
   //println(contours.size());
@@ -196,7 +192,6 @@ void draw() {
   pushMatrix();
   //scale(2, 2);
   //scale(cam2proj, cam2proj);
-  
   for (Contour contour : contours) {
     // Set resolution of contour
     contour.setPolygonApproximationFactor(polygonFactor);
@@ -210,7 +205,7 @@ void draw() {
       // Ignore little contours
       //// CHANGE: make smaller to not ignore small dog
       float area = contour.area();
-      //if(area < 2) continue; //don't ignore anything
+      if(area < 2) continue;
       
       stroke(0, 200, 200);
       noFill();
@@ -220,39 +215,14 @@ void draw() {
       // Add the center to the locations message
       centers.add(center.x * cam2proj + "," + center.y * cam2proj);
       ellipse(center.x, center.y, 10, 10);
-      println("x = ", center.x, "y = ", center.y);
-      
-      //int move = 1;//move or not move
-      if (  center.x < 300|| center.x > 100){
-        walkForward();
-      } else {
-        stopdog();
-      }
     }
   }
   popMatrix();
 
+
   // Send messages
   oscP5.send(centers, host);
-
   
-  
-}
-
-void drawgrid(int rows, int cols, int cellSize){
-  stroke(0);
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      rect(j * cellSize, i * cellSize, cellSize, cellSize);
-    }
-  }
-}
-
-void walkForward(){
-  myPort.write("kwkF");
-}
-void stopdog(){
-  myPort.write("kbalance");
 }
 
 void keyPressed() {
