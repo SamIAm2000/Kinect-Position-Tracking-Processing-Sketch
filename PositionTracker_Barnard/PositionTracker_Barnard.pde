@@ -107,8 +107,8 @@ void setup() {
   background(0);
   frameRate(25);
 
-  //myPort = new Serial(this, Serial.list()[2], 115200); 
-  //drawgrid(5,5,100);
+  myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
+  //drawgrid(5,5,100);         //Grid 
 }
 
 void draw() {
@@ -223,11 +223,12 @@ void draw() {
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       
+      stopdog();
       //int move = 1;//move or not move
-      //if (  center.x < 300|| center.x > 100){
+      //if (center.x < 300|| center.x > 100){
       //  walkForward();
       //} else {
-      //  stopdog();
+      //  
       //}
     }
   }
