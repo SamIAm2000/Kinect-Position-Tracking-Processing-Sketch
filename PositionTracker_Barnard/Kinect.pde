@@ -9,8 +9,8 @@ void getDepth(Kinect2 kinect2) {
   //int[] depth = kinect2.getIrImage();
   pg.noStroke();
   pg.fill(255);
-  for (int x = 0; x < kinect2.depthWidth; x+=skip) {
-    for (int y = 60; y < kinect2.depthHeight; y+=skip) {
+  for (int x = 0; x < kinect2.depthWidth-70; x+=skip) {
+    for (int y = 70; y < kinect2.depthHeight; y+=skip) {
       int offset = x + y * kinect2.depthWidth;
       float d = depth[offset];
       

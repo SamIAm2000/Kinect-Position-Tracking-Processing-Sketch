@@ -32,7 +32,7 @@ int MAX_D = 4050; //This should be distance to floor 3900
 int MIN_D = 2000; //2cm 500
 
 // Depth Map resolution
-int RESOLUTION = 2; //changed from 4 to 1
+int RESOLUTION = 1; //changed from 4 to 1
 // Is the camera facing right-side up?
 int [][] shifts = { { 0, 30}, { -30, 0} };
 

@@ -10,7 +10,7 @@ Thomas Sanchez Lengeling
  */
 // Kinect Library
 import org.openkinect.processing.*;
-//import processing.serials.*;
+//import processing.serial.*;
 //Serial myPort;
 
 // OpenCV Library
@@ -61,7 +61,7 @@ int polygonFactor = 1;
 // Contrast tolerance for detecting foreground v. background
 int threshold = 10; // was 10
 // How big the contour needs to be
-int numPointsMin = 50;      //was 100 (was numPoints), 50 saw the dog,
+int numPointsMin = 30;      //was 100 (was numPoints), 50 saw the dog,
 int numPointsMax = 100;
 // Off-screen canvas to draw the depth map point cloud data to
 PGraphics pg;
@@ -148,13 +148,13 @@ void draw() {
 
    //Fire up the PGraphic
   pg.beginDraw();
-  pg.rectMode(CENTER);
-  pg.background(0);
+  //pg.rectMode(CENTER);
+  //pg.background(0);
   // Get depth for each camera
   // Draw the point cloud to the PGraphic
   pg.pushMatrix();
-  pg.translate(CAM_CENTERY, CAM_CENTERX);
-  pg.translate(shifts[0][0], shifts[0][1]);
+  pg.translate(0, 0);
+  //pg.translate(shifts[0][0], shifts[0][1]);
   //pg.scale(mm2px, -mm2px);
   pg.scale(1, -1);
   pg.rotate(PI/2);
@@ -164,8 +164,8 @@ void draw() {
   pg.popMatrix();
 
   pg.pushMatrix();
-  pg.translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
-  pg.translate(shifts[1][0], shifts[1][1]);
+  pg.translate(394,0);
+  //pg.translate(shifts[1][0], shifts[1][1]);
   //pg.scale(mm2px, -mm2px);
   pg.scale(1, -1);
   pg.rotate(-PI/2);
@@ -182,15 +182,15 @@ void draw() {
   img.loadPixels();
   // Set img pixel data equal to pg pixel data
   img.pixels = pg.pixels;
-  img.updatePixels();
-  text(frameRate, width/2, height/2 - 100);
-  //what's this for? it just gets you the brightness of a random pixel in img?
-  text(brightness(img.pixels[int(random(img.pixels.length))]), width/2, height/2);
+  //img.updatePixels();
+  //text(frameRate, width/2, height/2 - 100);
+  ////what's this for? it just gets you the brightness of a random pixel in img?
+  //text(brightness(img.pixels[int(random(img.pixels.length))]), width/2, height/2);
   
   // Show depth camera image- should be commented out typically  
   //image(img, 0, 0);
   //img = kinect2a.getIrImage();
-  image(img, 0,0);
+  //image(img, 0,0);
   // Send the PImage into OpenCV
   opencv.loadImage(img);
   opencv.gray();
@@ -229,12 +229,12 @@ void draw() {
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       
-      //stopdog();
+      //
       //int move = 1;//move or not move
       //if (center.x < 300|| center.x > 100){
       //  walkForward();
       //} else {
-      //  
+      //  stopdog();
       //}
     }
   }
@@ -242,19 +242,17 @@ void draw() {
 
   // Send messages
   oscP5.send(centers, host);
-
-  
   
 }
 
-void drawgrid(int rows, int cols, int cellSize){
-  stroke(0);
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      rect(j * cellSize, i * cellSize, cellSize, cellSize);
-    }
-  }
-}
+//void drawgrid(int rows, int cols, int cellSize){
+//  stroke(0);
+//  for (int i = 0; i < rows; i++) {
+//    for (int j = 0; j < cols; j++) {
+//      rect(j * cellSize, i * cellSize, cellSize, cellSize);
+//    }
+//  }
+//}
 
 //void walkForward(){
 //  myPort.write("kwkF");
