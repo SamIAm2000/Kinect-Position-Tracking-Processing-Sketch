@@ -97,10 +97,12 @@ void setup() {
   // Set-up Kinects 
   kinect2a = new Kinect2(this);
   kinect2a.initDepth();
+  kinect2a.initIR();
   kinect2a.initDevice(0);
 
   kinect2b = new Kinect2(this);
   kinect2b.initDepth();
+  kinect2b.initIR();
   kinect2b.initDevice(1);
 
   // Draw the background
@@ -113,38 +115,38 @@ void setup() {
 
 void draw() {
   background(0);
-  //// to add the background depth image to the display
-  //// CHANGE: need to scale and rotate as below 
-  // Do the follow translations and scaling and rotating 
-  //pg.translate(CAM_CENTERY, CAM_CENTERX);
-  //pg.translate(shifts[0][0], shifts[0][1]);
-  //pg.scale(mm2px, -mm2px);
-  //pg.rotate(PI/2);
+  ////// to add the background depth image to the display
+  ////// CHANGE: need to scale and rotate as below 
+  //// Do the follow translations and scaling and rotating 
+  ////pg.translate(CAM_CENTERY, CAM_CENTERX);
+  ////pg.translate(shifts[0][0], shifts[0][1]);
+  ////pg.scale(mm2px, -mm2px);
+  ////pg.rotate(PI/2);
 
-  pushMatrix();  
-  //translate(CAM_CENTERY, CAM_CENTERX);
-  //translate(-200,250);
-  //translate(shifts[0][0], shifts[0][1]);
-  translate(0,0); //try this?
-  scale(1, -1);//flips image
-  //rotate(PI/2);
-  image(kinect2a.getDepthImage(), 0, 0);
-  popMatrix(); //pop matrix to reset transformations
+  //pushMatrix();  
+  ////translate(CAM_CENTERY, CAM_CENTERX);
+  ////translate(-200,250);
+  ////translate(shifts[0][0], shifts[0][1]);
+  //translate(0,0); //try this?
+  //scale(1, -1);//flips image
+  ////rotate(PI/2);
+  //image(kinect2a.getDepthImage(), 0, 0);
+  //popMatrix(); //pop matrix to reset transformations
  
   
-  pushMatrix();    
-  //translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
-  translate(394,0);
-  //translate(shifts[1][0], shifts[1][1]);
-  scale(1, -1);//flips image
-  rotate(-PI/2);
-  image(kinect2b.getDepthImage(), 0, 0);
-  popMatrix(); 
+  //pushMatrix();    
+  ////translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
+  //translate(394,0);
+  ////translate(shifts[1][0], shifts[1][1]);
+  //scale(1, -1);//flips image
+  //rotate(-PI/2);
+  //image(kinect2b.getDepthImage(), 0, 0);
+  //popMatrix(); 
 
   // Clear OSC messages
   centers = new OscMessage("/centers");
 
-  // Fire up the PGraphic
+   //Fire up the PGraphic
   pg.beginDraw();
   pg.rectMode(CENTER);
   pg.background(0);
@@ -153,26 +155,29 @@ void draw() {
   pg.pushMatrix();
   pg.translate(CAM_CENTERY, CAM_CENTERX);
   pg.translate(shifts[0][0], shifts[0][1]);
-  pg.scale(mm2px, -mm2px);
+  //pg.scale(mm2px, -mm2px);
+  pg.scale(1, -1);
   pg.rotate(PI/2);
 
-  getDepth(kinect2a);
+  //getDepth(kinect2a)
+  pg.image(kinect2a.getIrImage(), 0, 0);
   pg.popMatrix();
 
   pg.pushMatrix();
   pg.translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
   pg.translate(shifts[1][0], shifts[1][1]);
-  pg.scale(mm2px, -mm2px);
+  //pg.scale(mm2px, -mm2px);
+  pg.scale(1, -1);
   pg.rotate(-PI/2);
-  getDepth(kinect2b);
-
+  //getDepth(kinect2b);
+  pg.image(kinect2b.getIrImage(), 0, 0);
   pg.popMatrix();
   pg.endDraw();
 
-  // Transfer PGraphic data over into an PImage
-  // openCV won’t accept PGraphic objects and your can’t draw directly to PImage objects
+   //Transfer PGraphic data over into an PImage
+   //openCV won’t accept PGraphic objects and your can’t draw directly to PImage objects
 
-  // Load the pixels for pg and img into memory so you can use them.
+   //Load the pixels for pg and img into memory so you can use them.
   pg.loadPixels();
   img.loadPixels();
   // Set img pixel data equal to pg pixel data
@@ -184,7 +189,8 @@ void draw() {
   
   // Show depth camera image- should be commented out typically  
   //image(img, 0, 0);
-  
+  //img = kinect2a.getIrImage();
+  image(img, 0,0);
   // Send the PImage into OpenCV
   opencv.loadImage(img);
   opencv.gray();
