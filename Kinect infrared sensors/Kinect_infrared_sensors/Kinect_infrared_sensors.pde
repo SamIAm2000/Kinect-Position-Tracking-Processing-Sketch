@@ -10,8 +10,8 @@ Thomas Sanchez Lengeling
  */
 // Kinect Library
 import org.openkinect.processing.*;
-//import processing.serial.*;
-//Serial myPort;
+import processing.serial.*;
+Serial myPort;
 
 // OpenCV Library
 import gab.opencv.*;
@@ -93,15 +93,14 @@ void setup() {
   // Set-up OpenCV
   opencv = new OpenCV(this, pg.width, pg.height);
 
-
   // Set-up Kinects 
   kinect2a = new Kinect2(this);
-  kinect2a.initDepth();
+  //kinect2a.initDepth();
   kinect2a.initIR();
   kinect2a.initDevice(0);
 
   kinect2b = new Kinect2(this);
-  kinect2b.initDepth();
+  //kinect2b.initDepth();
   kinect2b.initIR();
   kinect2b.initDevice(1);
 
@@ -109,7 +108,7 @@ void setup() {
   background(0);
   frameRate(25);
 
-  //myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
+  myPort = new Serial(this, Serial.list()[1], 115200);     //Outgoing commands
   //drawgrid(5,5,100);         //Grid 
 }
 
@@ -230,12 +229,13 @@ void draw() {
       println("x = ", center.x, "y = ", center.y);
       
       //
-      //int move = 1;//move or not move
-      //if (center.x < 300|| center.x > 100){
-      //  walkForward();
-      //} else {
-      //  stopdog();
-      //}
+      stopdog();
+      int move = 1;//move or not move
+      if (center.x < 300|| center.x > 100){
+        walkForward();
+      } else {
+        stopdog();
+      }
     }
   }
   popMatrix();
@@ -245,21 +245,21 @@ void draw() {
   
 }
 
-//void drawgrid(int rows, int cols, int cellSize){
-//  stroke(0);
-//  for (int i = 0; i < rows; i++) {
-//    for (int j = 0; j < cols; j++) {
-//      rect(j * cellSize, i * cellSize, cellSize, cellSize);
-//    }
-//  }
-//}
+void drawgrid(int rows, int cols, int cellSize){
+  stroke(0);
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      rect(j * cellSize, i * cellSize, cellSize, cellSize);
+    }
+  }
+}
 
-//void walkForward(){
-//  myPort.write("kwkF");
-//}
-//void stopdog(){
-//  myPort.write("kbalance");
-//}
+void walkForward(){
+  myPort.write("kwkF");
+}
+void stopdog(){
+  myPort.write("kbalance");
+}
 
 void keyPressed() {
   if (keyCode == TAB) {
