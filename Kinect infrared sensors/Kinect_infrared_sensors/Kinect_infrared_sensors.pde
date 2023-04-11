@@ -97,73 +97,41 @@ void setup() {
   kinect2a = new Kinect2(this);
   //kinect2a.initDepth();
   kinect2a.initIR();
-  kinect2a.initDevice(0);
 
   kinect2b = new Kinect2(this);
   //kinect2b.initDepth();
   kinect2b.initIR();
+  
+  kinect2a.initDevice(0);
   kinect2b.initDevice(1);
 
   // Draw the background
   background(0);
-  frameRate(25);
+  frameRate(25);//was 25 originally
 
-  myPort = new Serial(this, Serial.list()[1], 115200);     //Outgoing commands
+  //myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
   //drawgrid(5,5,100);         //Grid 
 }
 
 void draw() {
   background(0);
-  ////// to add the background depth image to the display
-  ////// CHANGE: need to scale and rotate as below 
-  //// Do the follow translations and scaling and rotating 
-  ////pg.translate(CAM_CENTERY, CAM_CENTERX);
-  ////pg.translate(shifts[0][0], shifts[0][1]);
-  ////pg.scale(mm2px, -mm2px);
-  ////pg.rotate(PI/2);
-
-  //pushMatrix();  
-  ////translate(CAM_CENTERY, CAM_CENTERX);
-  ////translate(-200,250);
-  ////translate(shifts[0][0], shifts[0][1]);
-  //translate(0,0); //try this?
-  //scale(1, -1);//flips image
-  ////rotate(PI/2);
-  //image(kinect2a.getDepthImage(), 0, 0);
-  //popMatrix(); //pop matrix to reset transformations
- 
-  
-  //pushMatrix();    
-  ////translate(CAM_HEIGHT + CAM_CENTERY, CAM_CENTERX);
-  //translate(394,0);
-  ////translate(shifts[1][0], shifts[1][1]);
-  //scale(1, -1);//flips image
-  //rotate(-PI/2);
-  //image(kinect2b.getDepthImage(), 0, 0);
-  //popMatrix(); 
 
   // Clear OSC messages
   centers = new OscMessage("/centers");
 
    //Fire up the PGraphic
   pg.beginDraw();
-  //pg.rectMode(CENTER);
-  //pg.background(0);
-  // Get depth for each camera
-  // Draw the point cloud to the PGraphic
+  pg.background(0);
   pg.pushMatrix();
   pg.translate(0, 0);
-  //pg.translate(shifts[0][0], shifts[0][1]);
-  //pg.scale(mm2px, -mm2px);
-  pg.scale(1, -1);
+  pg.scale(-1, 1);
   pg.rotate(PI/2);
-
   //getDepth(kinect2a)
   pg.image(kinect2a.getIrImage(), 0, 0);
   pg.popMatrix();
 
   pg.pushMatrix();
-  pg.translate(394,0);
+  pg.translate(240,16); //if kinects intalled perfectly, it should be (394, 0)
   //pg.translate(shifts[1][0], shifts[1][1]);
   //pg.scale(mm2px, -mm2px);
   pg.scale(1, -1);
@@ -172,7 +140,7 @@ void draw() {
   pg.image(kinect2b.getIrImage(), 0, 0);
   pg.popMatrix();
   pg.endDraw();
-
+  //image(pg,0,0);
    //Transfer PGraphic data over into an PImage
    //openCV won’t accept PGraphic objects and your can’t draw directly to PImage objects
 
@@ -181,7 +149,7 @@ void draw() {
   img.loadPixels();
   // Set img pixel data equal to pg pixel data
   img.pixels = pg.pixels;
-  //img.updatePixels();
+  img.updatePixels();
   //text(frameRate, width/2, height/2 - 100);
   ////what's this for? it just gets you the brightness of a random pixel in img?
   //text(brightness(img.pixels[int(random(img.pixels.length))]), width/2, height/2);
@@ -229,13 +197,13 @@ void draw() {
       println("x = ", center.x, "y = ", center.y);
       
       //
-      stopdog();
-      int move = 1;//move or not move
-      if (center.x < 300|| center.x > 100){
-        walkForward();
-      } else {
-        stopdog();
-      }
+      //stopdog();
+      //int move = 1;//move or not move
+      //if (center.x < 300|| center.x > 100){
+      //  walkForward();
+      //} else {
+      //  stopdog();
+      //}
     }
   }
   popMatrix();
@@ -254,12 +222,14 @@ void drawgrid(int rows, int cols, int cellSize){
   }
 }
 
-void walkForward(){
-  myPort.write("kwkF");
-}
-void stopdog(){
-  myPort.write("kbalance");
-}
+//void walkForward(){
+//  myPort.write("kwkF");
+//  println("walk");
+//}
+//void stopdog(){
+//  myPort.write("kbalance");
+//  println("stop");
+//}
 
 void keyPressed() {
   if (keyCode == TAB) {
