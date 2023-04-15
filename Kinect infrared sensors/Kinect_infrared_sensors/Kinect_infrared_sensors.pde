@@ -75,6 +75,10 @@ NetAddress host;
 // Messages for centers
 OscMessage centers;
 
+//robot direction stuff
+String curdirection = "stop";
+String newdirection = "";
+
 void setup() {
   size(848, 512);
   //size(1920, 1080);
@@ -109,8 +113,8 @@ void setup() {
   background(0);
   frameRate(25);//was 25 originally
 
-  //myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
-  //drawgrid(5,5,100);         //Grid 
+  myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
+  myPort.write("kbalance");//first command is balance
 }
 
 void draw() {
@@ -163,6 +167,7 @@ void draw() {
   opencv.gray();
   opencv.threshold(threshold);
   image(opencv.getSnapshot(), 0, 0);        //This is to see what OpenCV sees
+  
   // Get some contours
   ArrayList<Contour>contours = opencv.findContours(false, false);
   //println(contours.size());
@@ -196,40 +201,48 @@ void draw() {
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       
-      //
-      //stopdog();
-      //int move = 1;//move or not move
-      //if (center.x < 300|| center.x > 100){
-      //  walkForward();
-      //} else {
-      //  stopdog();
-      //}
+      if (center.y < 270|| center.y > 75){
+       walkForward();
+      } else {
+       stopdog();
+      }
+      if newdirection != curdirection{
+        curdirection = newdirection
+        myPort.write(newdirection);
+      }
+      delay(10);
     }
   }
   popMatrix();
 
   // Send messages
   oscP5.send(centers, host);
+  pushMatrix();
+  translate(100,80);
+  drawgrid(5,5,40);
+  popMatrix();
+}
+
+void drawgrid(int cols, int rows, int cellSize){
+  stroke(255);
   
-}
-
-void drawgrid(int rows, int cols, int cellSize){
-  stroke(0);
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      rect(j * cellSize, i * cellSize, cellSize, cellSize);
-    }
+  for (var x = 0; x <= rows*cellSize; x += cellSize) {
+    line(x, 0, x, cols*cellSize);
   }
+  //Horizontal Lines
+  for (var y = 0; y <= cols*cellSize; y += cellSize) {
+    line(0, y, cellSize*rows, y);
+  } 
 }
 
-//void walkForward(){
-//  myPort.write("kwkF");
-//  println("walk");
-//}
-//void stopdog(){
-//  myPort.write("kbalance");
-//  println("stop");
-//}
+void walkForward(){
+  newdirection = "kwkF";
+  println("walk");
+}
+void stopdog(){
+  newdirection = "kbalance";
+  println("stop");
+}
 
 void keyPressed() {
   if (keyCode == TAB) {
