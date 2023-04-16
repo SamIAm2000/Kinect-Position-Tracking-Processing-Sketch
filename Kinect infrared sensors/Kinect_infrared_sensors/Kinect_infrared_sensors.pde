@@ -76,12 +76,12 @@ NetAddress host;
 OscMessage centers;
 
 //robot direction stuff
-String curdirection = "stop";
-String newdirection = "";
+String curdirection = "kbalance";
+String newdirection = "kbalance";
 
 void setup() {
-  size(848, 512);
-  //size(1920, 1080);
+  //size(848, 512);
+  size(1920, 1080);
   //fullScreen();
 
   // Set-up OSC
@@ -114,6 +114,7 @@ void setup() {
   frameRate(25);//was 25 originally
 
   myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
+  delay(10);
   myPort.write("kbalance");//first command is balance
 }
 
@@ -201,16 +202,20 @@ void draw() {
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       
-      if (center.y < 270|| center.y > 75){
-       walkForward();
-      } else {
-       stopdog();
-      }
-      if newdirection != curdirection{
-        curdirection = newdirection
+      //if (center.y < 270 && center.y > 75){
+      //   walkForward();
+      //} else {
+      // stopdog();
+      //}
+      if (newdirection != curdirection){
+        curdirection = newdirection;
         myPort.write(newdirection);
-      }
-      delay(10);
+        println(newdirection);
+        delay(10);
+      } //else{
+      //  myPort.write(newdirection);
+      //}
+      
     }
   }
   popMatrix();
@@ -237,11 +242,15 @@ void drawgrid(int cols, int rows, int cellSize){
 
 void walkForward(){
   newdirection = "kwkF";
-  println("walk");
+}
+void walkForwardRight(){
+  newdirection = "kwkR";
+}
+void walkForwardLeft(){
+  newdirection = "kwkL";
 }
 void stopdog(){
   newdirection = "kbalance";
-  println("stop");
 }
 
 void keyPressed() {
@@ -254,9 +263,17 @@ void keyPressed() {
   else if(keyCode == UP) {
    cam2proj += 0.1; 
   }
-    else if(keyCode == DOWN) {
+  else if(keyCode == DOWN) {
    cam2proj -= 0.1; 
   }
-
-  
+  //the following is for controlling the dog
+  else if (key == 's') {
+    stopdog();
+  } else if (key == 'w') {
+    walkForward();
+  } else if (key == 'a') {
+    walkForwardLeft();
+  } else if (key == 'd') {
+    walkForwardRight();
+  }
 }

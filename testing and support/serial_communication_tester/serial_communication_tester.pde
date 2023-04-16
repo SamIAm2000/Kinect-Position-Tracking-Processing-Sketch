@@ -19,9 +19,9 @@ void stopdog(){
 }
 
 void keyPressed() {
-  if (keyCode == UP) {
+  if (keyCode == DOWN) {
     stopdog();
-  } else if (keyCode == DOWN) {
+  } else if (keyCode == UP) {
     walkForward();
   }
 }

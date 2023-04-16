@@ -302,7 +302,13 @@ def main():
                                                                end_y,
                                                                end_yaw,
                                                                curvature)
-
+    print(plan_dubins_path(start_x,
+                                                               start_y,
+                                                               start_yaw,
+                                                               end_x,
+                                                               end_y,
+                                                               end_yaw,
+                                                               curvature))
     if show_animation:
         plt.plot(path_x, path_y, label="".join(mode))
         plot_arrow(start_x, start_y, start_yaw)
