@@ -11,13 +11,13 @@ Thomas Sanchez Lengeling
 // Kinect Library
 import org.openkinect.processing.*;
 
+// client
+import processing.net.*; 
+Client myClient;
+
 // OpenCV Library
 import gab.opencv.*;
 import java.awt.Rectangle;
-
-// OSC Communication Library
-import oscP5.*;
-import netP5.*;
 
 // Kinect Stuff
 final int NUM_CAMS = 2;
@@ -66,27 +66,10 @@ PGraphics pg;
 // Image to feed to openCV
 PImage img;
 
-// OSC Stuff
-OscP5 oscP5;
-NetAddress host;
-
-// Messages for centers
-OscMessage centers;
-
-//server stuff
-import processing.net.*; 
-Client myClient;
-
 void setup() {
   //size(848, 512);
   size(1920, 1080);
   //fullScreen();
-
-  // Set-up OSC
-  oscP5 = new OscP5(this, 8000);
-  host = new NetAddress("127.0.0.1", 12000);
-  centers = new OscMessage("/centers");
-
 
   // Set-up image objects to feed to OpenCV
   pg = createGraphics(CAM_HEIGHT*2, CAM_WIDTH);
@@ -110,14 +93,12 @@ void setup() {
   // Draw the background
   background(0);
   frameRate(25);//was 25 originally
-  //delay(10);
+  
+  myClient = new Client(this, "127.0.0.1", 12345); 
 }
 
 void draw() {
   background(0);
-
-  // Clear OSC messages
-  centers = new OscMessage("/centers");
 
    //Fire up the PGraphic
   pg.beginDraw();
@@ -154,10 +135,6 @@ void draw() {
   ////what's this for? it just gets you the brightness of a random pixel in img?
   //text(brightness(img.pixels[int(random(img.pixels.length))]), width/2, height/2);
   
-  // Show depth camera image- should be commented out typically  
-  //image(img, 0, 0);
-  //img = kinect2a.getIrImage();
-  //image(img, 0,0);
   // Send the PImage into OpenCV
   opencv.loadImage(img);
   opencv.gray();
@@ -197,23 +174,15 @@ void draw() {
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       
-      myClient.write("Paging Python!");
-      
+      myClient.write(center.x + ","+ center.y);
     }
   }
   popMatrix();
 
-  // Send messages
-  oscP5.send(centers, host);
   pushMatrix();
   translate(100,80);
   drawgrid(5,5,40);
   popMatrix();
-}
-
-String findDirection(){
-  
-  return newdirection;
 }
 
 void drawgrid(int cols, int rows, int cellSize){

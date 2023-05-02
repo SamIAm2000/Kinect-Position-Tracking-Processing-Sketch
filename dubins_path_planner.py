@@ -308,7 +308,7 @@ def main():
     # (as seen from a change in yaw)
     direction_list = []
     for i in range(len(path_yaw)-1):
-        if path_yaw[i] != path_yaw[i+1] and (len(direction_list) == 0 or len(direction_list) == 2):
+        if path_yaw[i] != path_yaw[i+1] and (len(direction_list) == 0):
             direction_list.append([mode[0], path_x[i], path_y[i]])
         elif path_yaw[i] == path_yaw[i+1] and len(direction_list) == 1:
             direction_list.append([mode[1],path_x[i], path_y[i]])

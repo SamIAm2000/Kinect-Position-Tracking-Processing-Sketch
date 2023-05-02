@@ -13,5 +13,5 @@ void setup() {
 } 
      
 void draw() { 
-    myClient.write("Paging Python!"); // send whatever you need to send here
+    myClient.write("108,102"); // send whatever you need to send here
 } 

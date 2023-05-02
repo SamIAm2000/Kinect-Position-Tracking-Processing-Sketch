@@ -1,3 +1,7 @@
+// This file usees the infrared sensors and the serial library in Porcessing to
+// send directions directly to the Bittle robot through Processing. The serial communication is rather finicky
+// and often stops working. We gave up and focused on working in Python -Eris 5/1/2023
+
 /*
 Thomas Sanchez Lengeling
  http://codigogenerativo.com/
@@ -98,7 +102,7 @@ void setup() {
 
   myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
   delay(10);
-  myPort.write("kbalance");//first command is balance
+  myPort.write("kbalance"); //first command is balance
 }
 
 void draw() {
@@ -187,7 +191,7 @@ void draw() {
       //} else {
       // stopdog();
       //}
-      newdirection = 
+
       if (newdirection != curdirection){
         curdirection = newdirection;
         myPort.write(newdirection);
