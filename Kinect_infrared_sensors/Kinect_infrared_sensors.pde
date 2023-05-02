@@ -73,8 +73,8 @@ String curdirection = "kbalance";
 String newdirection = "kbalance";
 
 void setup() {
-  //size(848, 512);
-  size(1920, 1080);
+  size(848, 512);
+  //size(1920, 1080);
   //fullScreen();
 
   // Set-up image objects to feed to OpenCV
@@ -99,8 +99,8 @@ void setup() {
   // Draw the background
   background(0);
   frameRate(25);//was 25 originally
-
-  myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
+  //Outgoing commands, change port depending on your computer
+  myPort = new Serial(this, Serial.list()[2], 115200);     
   delay(10);
   myPort.write("kbalance"); //first command is balance
 }
@@ -181,8 +181,6 @@ void draw() {
       rect(bb.x, bb.y, bb.width, bb.height); //uses the java Rectangle to draw a retangle in Processing
       // Calculate the center of the bounding box
       PVector center = new PVector(bb.x + bb.width/2, bb.y + bb.height/2);
-      // Add the center to the locations message
-      centers.add(center.x * cam2proj + "," + center.y * cam2proj);
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       

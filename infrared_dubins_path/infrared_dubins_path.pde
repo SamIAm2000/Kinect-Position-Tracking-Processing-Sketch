@@ -67,8 +67,8 @@ PGraphics pg;
 PImage img;
 
 void setup() {
-  //size(848, 512);
-  size(1920, 1080);
+  size(848, 512);
+  //size(1920, 1080);
   //fullScreen();
 
   // Set-up image objects to feed to OpenCV
@@ -169,12 +169,11 @@ void draw() {
       rect(bb.x, bb.y, bb.width, bb.height); //uses the java Rectangle to draw a retangle in Processing
       // Calculate the center of the bounding box
       PVector center = new PVector(bb.x + bb.width/2, bb.y + bb.height/2);
-      // Add the center to the locations message
-      centers.add(center.x * cam2proj + "," + center.y * cam2proj);
+      
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       
-      myClient.write(center.x + ","+ center.y);
+      myClient.write(center.x + ","+ -center.y);
     }
   }
   popMatrix();
@@ -197,18 +196,6 @@ void drawgrid(int cols, int rows, int cellSize){
   } 
 }
 
-void walkForward(){
-  newdirection = "kwkF";
-}
-void walkForwardRight(){
-  newdirection = "kwkR";
-}
-void walkForwardLeft(){
-  newdirection = "kwkL";
-}
-void stopdog(){
-  newdirection = "kbalance";
-}
 
 void keyPressed() {
   if (keyCode == TAB) {
