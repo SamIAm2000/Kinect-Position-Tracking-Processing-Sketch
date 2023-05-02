@@ -10,8 +10,6 @@ Thomas Sanchez Lengeling
  */
 // Kinect Library
 import org.openkinect.processing.*;
-import processing.serial.*;
-Serial myPort;
 
 // OpenCV Library
 import gab.opencv.*;
@@ -75,9 +73,9 @@ NetAddress host;
 // Messages for centers
 OscMessage centers;
 
-//robot direction stuff
-String curdirection = "kbalance";
-String newdirection = "kbalance";
+//server stuff
+import processing.net.*; 
+Client myClient;
 
 void setup() {
   //size(848, 512);
@@ -112,10 +110,7 @@ void setup() {
   // Draw the background
   background(0);
   frameRate(25);//was 25 originally
-
-  myPort = new Serial(this, Serial.list()[2], 115200);     //Outgoing commands
-  delay(10);
-  myPort.write("kbalance");//first command is balance
+  //delay(10);
 }
 
 void draw() {
@@ -202,19 +197,7 @@ void draw() {
       ellipse(center.x, center.y, 10, 10);
       println("x = ", center.x, "y = ", center.y);
       
-      //if (center.y < 270 && center.y > 75){
-      //   walkForward();
-      //} else {
-      // stopdog();
-      //}
-      if (newdirection != curdirection){
-        curdirection = newdirection;
-        myPort.write(newdirection);
-        println(newdirection);
-        delay(10);
-      } //else{
-      //  myPort.write(newdirection);
-      //}
+      myClient.write("Paging Python!");
       
     }
   }
@@ -226,6 +209,11 @@ void draw() {
   translate(100,80);
   drawgrid(5,5,40);
   popMatrix();
+}
+
+String findDirection(){
+  
+  return newdirection;
 }
 
 void drawgrid(int cols, int rows, int cellSize){
@@ -265,15 +253,5 @@ void keyPressed() {
   }
   else if(keyCode == DOWN) {
    cam2proj -= 0.1; 
-  }
-  //the following is for controlling the dog
-  else if (key == 's') {
-    stopdog();
-  } else if (key == 'w') {
-    walkForward();
-  } else if (key == 'a') {
-    walkForwardLeft();
-  } else if (key == 'd') {
-    walkForwardRight();
   }
 }

@@ -285,30 +285,37 @@ def main():
     import matplotlib.pyplot as plt
     from utils.plot import plot_arrow
 
-    start_x = 1.0  # [m]
-    start_y = 1.0  # [m]
-    start_yaw = np.deg2rad(45.0)  # [rad]
+    start_x = 4.5  # [m]
+    start_y = 0.0  # [m]
+    start_yaw = np.deg2rad(270)  # [rad]
 
-    end_x = -3.0  # [m]
-    end_y = -3.0  # [m]
-    end_yaw = np.deg2rad(-45.0)  # [rad]
+    end_x = 0.0  # [m]
+    end_y = -2.5  # [m]
+    end_yaw = np.deg2rad(180)  # [rad]
 
     curvature = 1.0
-
+    step_size = 0.1
     path_x, path_y, path_yaw, mode, lengths = plan_dubins_path(start_x,
                                                                start_y,
                                                                start_yaw,
                                                                end_x,
                                                                end_y,
                                                                end_yaw,
-                                                               curvature)
-    print(plan_dubins_path(start_x,
-                                                               start_y,
-                                                               start_yaw,
-                                                               end_x,
-                                                               end_y,
-                                                               end_yaw,
-                                                               curvature))
+                                                               curvature,
+                                                               step_size)
+    # this is to take the generated list from the previous function and 
+    # reduce it to points where the robot needs to change direction
+    # (as seen from a change in yaw)
+    direction_list = []
+    for i in range(len(path_yaw)-1):
+        if path_yaw[i] != path_yaw[i+1] and (len(direction_list) == 0 or len(direction_list) == 2):
+            direction_list.append([mode[0], path_x[i], path_y[i]])
+        elif path_yaw[i] == path_yaw[i+1] and len(direction_list) == 1:
+            direction_list.append([mode[1],path_x[i], path_y[i]])
+        elif path_yaw[i] != path_yaw[i+1] and len(direction_list) == 2:
+            direction_list.append([mode[2], path_x[i], path_y[i]])
+    print(direction_list)
+
     if show_animation:
         plt.plot(path_x, path_y, label="".join(mode))
         plot_arrow(start_x, start_y, start_yaw)
